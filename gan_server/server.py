@@ -12,7 +12,7 @@ import base64
 from io import BytesIO
 import PIL.Image
 
-module_path = 'https://tfhub.dev/deepmind/biggan-256/2'
+module_path = 'https://tfhub.dev/deepmind/biggan-512/2'
 rand_seed = 123
 truncation = 0.5
 
@@ -139,6 +139,20 @@ def get_random():
             vectors.tolist(),
             labels.tolist()
         ])
+        return response
+    except Exception as e:
+        print(e)
+        return '', 500
+
+@app.route('/random', methods=['GET'])
+def get_random_get():
+    try:
+        num = 5
+        print('Random', num)
+        t = time.time()
+        imgs, vectors, labels = create_random_images(num, max_classes=3)
+        print('Finished in', time.time()-t)
+        response = ''.join([ f'<img src="{encode_img(arr)}">' for arr in imgs ])
         return response
     except Exception as e:
         print(e)
