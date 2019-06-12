@@ -8,7 +8,7 @@ services:
       context: ./server
     volumes:
       - ./server:/app
-      # - ./public:/app/public
+      - ./server/public/img/:/app/public/img/
     depends_on: 
       - database
       - back_end
@@ -41,5 +41,5 @@ services:
     ports:
       - 5000:5000
     working_dir: /app
-    command:  bash -c "ip route && FLASK_APP=server.py flask run --host=0.0.0.0"
+    command:  bash -c "FLASK_APP=server.py flask run --host=0.0.0.0"
   
