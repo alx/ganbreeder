@@ -1,0 +1,45 @@
+version: "3.1"
+
+services:
+  front_end:
+    # image: node:lts-alpine
+    build:
+      dockerfile: Dockerfile
+      context: ./server
+    volumes:
+      - ./server:/app
+      # - ./public:/app/public
+    depends_on: 
+      - database
+      - back_end
+    ports:
+      - 8888:8888
+    working_dir: /app
+    command: ash -c "npm install && /devops/wait-for.sh back_end:5000 -t 300 && node_modules/knex/bin/cli.js migrate:latest && node make_randoms.js && node updatecache.js && node ."
+
+  database:
+    image: postgres:11-alpine
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_PASSWORD: ganbreederpostgres
+      PGDATA: /tmp
+    volumes:
+      - ./devops/data/:/var/lib/postgresql/data/
+
+  back_end:
+    build:
+      dockerfile: Dockerfile
+      context: ./gan_server
+    volumes:
+      #- ./gan_server:/app
+      - ./gan_server/messages:/var/log/messages
+    # expose:
+    #   - 5000
+    environment:
+      FLASK_ENV: development
+    ports:
+      - 5000:5000
+    working_dir: /app
+    command:  bash -c "ip route && FLASK_APP=server.py flask run --host=0.0.0.0"
+  
