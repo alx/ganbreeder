@@ -3,5 +3,8 @@ modules/
 server/secrets.js
 server/node_modules/
 server/public/img/
+!./server/public/img/.gitkeep
 lambda/
 testing.py
+__pycache__
+cache.json
