@@ -16,6 +16,8 @@ module_path = 'https://tfhub.dev/deepmind/biggan-512/2'
 rand_seed = 123
 truncation = 0.5
 
+nb_variations = 3
+
 tf.reset_default_graph()
 print('Loading BigGAN module from:', module_path)
 module = hub.Module(module_path)
@@ -152,7 +154,7 @@ def get_random_get():
         t = time.time()
         imgs, vectors, labels = create_random_images(num, max_classes=3)
         print('Finished in', time.time()-t)
-        response = ''.join([ f'<img src="{encode_img(arr)}">' for arr in imgs ])
+        response = ''.join([ "<img src='%s'/>" % encoded for arr in imgs])
         return response
     except Exception as e:
         print(e)
@@ -166,7 +168,7 @@ def children():
         label  = json.loads(request.form['label'])
         vector = np.asarray(vector, dtype='float64')
         label  = np.asarray(label, dtype='float64')
-        new_vectors, new_labels = create_variations(12, vector, label)
+        new_vectors, new_labels = create_variations(nb_variations, vector, label)
 
         new_ims = sample(new_vectors, new_labels)
 
@@ -186,7 +188,7 @@ def mix_images():
         label2 = np.asarray(json.loads(request.form['label2']), dtype='float64')
         vector1 = np.asarray(json.loads(request.form['vector1']), dtype='float64')
         vector2 = np.asarray(json.loads(request.form['vector2']), dtype='float64')
-        new_vectors, new_labels = interpolate(12, vector1, vector2, label1, label2)
+        new_vectors, new_labels = interpolate(nb_variations, vector1, vector2, label1, label2)
         new_ims = sample(new_vectors, new_labels)
         return jsonify([
             [ encode_img(arr) for arr in new_ims ],
