@@ -8,7 +8,7 @@ async function main() {
         url: secrets.ganurl256+'/random',
         method: 'POST',
         json: true,
-        form: { num: '24' }
+        form: { num: '3' }
     })
     await save_results({ imgs, vectors, labels, size })
     console.log('all done')

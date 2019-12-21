@@ -1,3 +1,6 @@
+16colors/
+all_crop/
+data/
 modules/
 .ipynb_checkpoints/
 server/secrets.js
