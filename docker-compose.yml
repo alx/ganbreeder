@@ -1,6 +1,7 @@
-version: "3.1"
+version: "2.3"
 
 services:
+
   front_end:
     # image: node:lts-alpine
     build:
@@ -15,7 +16,7 @@ services:
     ports:
       - 8888:8888
     working_dir: /app
-    command: ash -c "npm install && /devops/wait-for.sh back_end:5000 -t 300 && node_modules/knex/bin/cli.js migrate:latest && node make_randoms.js && node updatecache.js && node ."
+    command: ash -c "npm install && node_modules/knex/bin/cli.js migrate:latest && node make_randoms.js && node updatecache.js && node ."
 
   database:
     image: postgres:11-alpine
